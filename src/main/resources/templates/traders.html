@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Polymarket Traders</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f4f1ea;
+            color: #1d2a2e;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 42px;
+        }
+
+        .subtitle {
+            margin: 0 0 32px;
+            color: #617075;
+        }
+
+        section {
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #fffaf0;
+            border: 1px solid #ded5c5;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(29, 42, 46, 0.08);
+        }
+
+        h2 {
+            margin: 0 0 16px;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #ece5d8;
+            text-align: left;
+        }
+
+        th {
+            background: #243b3f;
+            color: white;
+            font-weight: 600;
+        }
+
+        td.wallet {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 700px) {
+            main {
+                padding: 24px 12px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Top Polymarket Traders</h1>
+    <p class="subtitle">Ranked by estimated trading volume from recent activity.</p>
+
+    <section>
+        <h2>Weekly</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Wallet</th>
+                <th>Volume</th>
+                <th>Trades Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trader : ${weeklyTraders}">
+                <td class="wallet" th:text="${trader.wallet}">wallet</td>
+                <td th:text="${#numbers.formatDecimal(trader.totalVolume, 1, 2)}">0.00</td>
+                <td th:text="${trader.tradesCount}">0</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(weeklyTraders)}">
+                <td colspan="3">No weekly trader data available.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Monthly</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Wallet</th>
+                <th>Volume</th>
+                <th>Trades Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trader : ${monthlyTraders}">
+                <td class="wallet" th:text="${trader.wallet}">wallet</td>
+                <td th:text="${#numbers.formatDecimal(trader.totalVolume, 1, 2)}">0.00</td>
+                <td th:text="${trader.tradesCount}">0</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(monthlyTraders)}">
+                <td colspan="3">No monthly trader data available.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>6 Months</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Wallet</th>
+                <th>Volume</th>
+                <th>Trades Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trader : ${halfYearTraders}">
+                <td class="wallet" th:text="${trader.wallet}">wallet</td>
+                <td th:text="${#numbers.formatDecimal(trader.totalVolume, 1, 2)}">0.00</td>
+                <td th:text="${trader.tradesCount}">0</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(halfYearTraders)}">
+                <td colspan="3">No 6 month trader data available.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

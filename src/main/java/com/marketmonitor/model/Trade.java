@@ -1,14 +1,23 @@
-package model;
+package com.marketmonitor.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Trade {
     private String id;
+
+    @JsonAlias({"market", "marketId", "conditionId"})
     private String market;
+
+    @JsonAlias({"proxyWallet", "wallet", "walletAddress", "user"})
+    private String wallet;
+
     private long timestamp;
     private double price;
-    private double size;
+
+    @JsonAlias({"amount", "size"})
+    private double amount;
 
     public Trade() {}
 
@@ -20,6 +29,14 @@ public class Trade {
         return market;
     }
 
+    public String getMarketId() {
+        return market;
+    }
+
+    public String getWallet() {
+        return wallet;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -28,7 +45,11 @@ public class Trade {
         return price;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
     public double getSize() {
-        return size;
+        return amount;
     }
 }

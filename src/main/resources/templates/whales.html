@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymarket Whale Tracker</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f4f1ea;
+            color: #1d2a2e;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 42px;
+        }
+
+        .subtitle {
+            margin: 0 0 32px;
+            color: #617075;
+        }
+
+        section {
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #fffaf0;
+            border: 1px solid #ded5c5;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(29, 42, 46, 0.08);
+        }
+
+        h2 {
+            margin: 0 0 16px;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #ece5d8;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #243b3f;
+            color: white;
+            font-weight: 600;
+        }
+
+        td.wallet,
+        td.market {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .note {
+            color: #9d3f2f;
+            font-weight: 700;
+        }
+
+        @media (max-width: 700px) {
+            main {
+                padding: 24px 12px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            section {
+                padding: 16px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Polymarket Whale Tracker</h1>
+    <p class="subtitle">Large recent trades and wallets with repeated large activity.</p>
+
+    <section>
+        <h2>Recent Whale Trades</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Wallet</th>
+                <th>Amount</th>
+                <th>Time</th>
+                <th>Market</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="whale : ${recentWhales}">
+                <td class="wallet" th:text="${whale.wallet}">wallet</td>
+                <td th:text="${'$' + #numbers.formatDecimal(whale.amount, 1, 2)}">$0.00</td>
+                <td th:text="${#temporals.format(whale.timestamp, 'yyyy-MM-dd HH:mm')}">time</td>
+                <td class="market" th:text="${whale.marketId}">market</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(recentWhales)}">
+                <td colspan="4">No whale trades found in recent Polymarket activity.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Active Whales</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Wallet</th>
+                <th>Number of Trades</th>
+                <th>Note</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="activeWhale : ${activeWhales}">
+                <td class="wallet" th:text="${activeWhale.key}">wallet</td>
+                <td th:text="${#lists.size(activeWhale.value)}">0</td>
+                <td class="note">high activity</td>
+            </tr>
+            <tr th:if="${#maps.isEmpty(activeWhales)}">
+                <td colspan="3">No active whale wallets detected.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

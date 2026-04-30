@@ -33,6 +33,8 @@ bin/
 .idea/
 *.iml
 
+lib/
+
 
 *.class
 target/
