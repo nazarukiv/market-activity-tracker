@@ -45,3 +45,5 @@ target/
 .env
 *.properties
 application.properties
+
+/docs/

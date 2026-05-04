@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="site-nav" th:fragment="siteNav(active)">
+    <div class="site-nav__inner container">
+        <a class="brand" th:href="@{/}" href="/">
+            <span class="brand-mark" aria-hidden="true">MM</span>
+            <span>Market Monitor</span>
+        </a>
+
+        <input class="nav-toggle" type="checkbox" id="nav-toggle">
+        <label class="nav-menu-button" for="nav-toggle" aria-label="Toggle navigation">
+            <span aria-hidden="true"></span>
+        </label>
+
+        <nav class="site-nav__links" aria-label="Primary navigation">
+            <a class="nav-link" th:classappend="${active == 'home'} ? ' is-active' : ''" th:href="@{/}" href="/">Overview</a>
+            <a class="nav-link" th:classappend="${active == 'traders'} ? ' is-active' : ''" th:href="@{/traders}" href="/traders">Traders</a>
+            <a class="nav-link" th:classappend="${active == 'whales'} ? ' is-active' : ''" th:href="@{/whales/view}" href="/whales/view">Whales</a>
+        </nav>
+
+        <div class="site-nav__actions">
+            <a class="nav-link" th:href="@{/whales}" href="/whales">API</a>
+            <a class="button-primary" th:href="@{/traders}" href="/traders">Open tracker</a>
+        </div>
+    </div>
+</header>
+
+<footer class="site-footer" th:fragment="siteFooter">
+    <div class="site-footer__grid container">
+        <div>
+            <a class="brand" th:href="@{/}" href="/">
+                <span class="brand-mark" aria-hidden="true">MM</span>
+                <span>Market Monitor</span>
+            </a>
+            <p class="site-footer__copy">A quiet workspace for Polymarket trader rankings, large trade flow, and public activity endpoints.</p>
+        </div>
+        <div>
+            <div class="footer-label">Views</div>
+            <div class="footer-list">
+                <a class="footer-link" th:href="@{/traders}" href="/traders">Top Traders</a>
+                <a class="footer-link" th:href="@{/whales/view}" href="/whales/view">Whale Tracker</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-label">Trader API</div>
+            <div class="footer-list">
+                <a class="footer-link" th:href="@{/traders/top/weekly}" href="/traders/top/weekly">Weekly</a>
+                <a class="footer-link" th:href="@{/traders/top/monthly}" href="/traders/top/monthly">Monthly</a>
+                <a class="footer-link" th:href="@{/traders/top/half-year}" href="/traders/top/half-year">Six months</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-label">Whale API</div>
+            <div class="footer-list">
+                <a class="footer-link" th:href="@{/whales}" href="/whales">Recent whales</a>
+                <a class="footer-link" th:href="@{/whales/active}" href="/whales/active">Active wallets</a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

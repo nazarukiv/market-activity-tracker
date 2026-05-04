@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Activity Monitor</title>
+    <link rel="stylesheet" th:href="@{/css/market-ui.css}" href="/css/market-ui.css">
+</head>
+<body>
+<div class="page-shell">
+    <header th:replace="~{fragments/layout :: siteNav('home')}"></header>
+
+    <main>
+        <section class="hero-band">
+            <div class="hero-grid container">
+                <div class="hero-copy">
+                    <span class="badge-pill">Polymarket activity</span>
+                    <h1>Market flow, edited into a calmer signal.</h1>
+                    <p>Monitor top trader volume, recent large trades, and repeated whale wallet activity through a clean workspace that keeps the data legible.</p>
+                    <div class="button-row">
+                        <a class="button-primary" th:href="@{/traders}" href="/traders">View traders</a>
+                        <a class="button-outline" th:href="@{/whales/view}" href="/whales/view">Track whales</a>
+                    </div>
+                </div>
+
+                <aside class="gradient-orb-card signal-card" aria-label="Market activity summary">
+                    <div>
+                        <span class="badge-pill badge-pill--soft">Live surfaces</span>
+                        <p class="signal-card__headline">Rankings and large trade flow in one editorial workspace.</p>
+                    </div>
+                    <div class="signal-list">
+                        <div class="signal-row">
+                            <span>Trader windows</span>
+                            <strong>7d · 30d · 6m</strong>
+                        </div>
+                        <div class="signal-row">
+                            <span>Whale threshold</span>
+                            <strong>$10k+</strong>
+                        </div>
+                        <div class="signal-row">
+                            <span>Public endpoints</span>
+                            <strong>5 routes</strong>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section-band">
+            <div class="container">
+                <div class="section-heading">
+                    <div class="section-heading__copy">
+                        <span class="badge-pill">Workspace</span>
+                        <h2 class="section-title">Choose the market lens.</h2>
+                        <p class="section-copy">Each view keeps the existing backend data intact and presents it with more space, clearer hierarchy, and softer surfaces.</p>
+                    </div>
+                </div>
+
+                <div class="feature-grid" aria-label="Tracker views">
+                    <a class="feature-card" th:href="@{/traders}" href="/traders">
+                        <div>
+                            <div class="feature-card__meta">Rankings</div>
+                            <h3 class="card-title">Top Traders</h3>
+                            <p class="feature-card__copy">Weekly, monthly, and six month trader performance ranked by estimated volume.</p>
+                        </div>
+                        <span class="button-tertiary feature-card__action">Open view</span>
+                    </a>
+
+                    <a class="feature-card" th:href="@{/whales/view}" href="/whales/view">
+                        <div>
+                            <div class="feature-card__meta">Large trades</div>
+                            <h3 class="card-title">Whale Tracker</h3>
+                            <p class="feature-card__copy">Recent large trades and wallets with repeated high-value market activity.</p>
+                        </div>
+                        <span class="button-tertiary feature-card__action">Open view</span>
+                    </a>
+
+                    <a class="feature-card" th:href="@{/whales}" href="/whales">
+                        <div>
+                            <div class="feature-card__meta">JSON feeds</div>
+                            <h3 class="card-title">API Surface</h3>
+                            <p class="feature-card__copy">Use the existing trader and whale endpoints for downstream analysis or automation.</p>
+                        </div>
+                        <span class="button-tertiary feature-card__action">Open endpoint</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: siteFooter}"></footer>
+</div>
+</body>
+</html>

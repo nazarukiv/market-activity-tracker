@@ -24,9 +24,17 @@ Requirements:
 3. Choose `Add as Maven Project` or `Reload Maven Project`.
 4. Wait for Maven dependencies to finish downloading.
 5. Run `com.marketmonitor.MarketMonitorApplication`.
-6. Open `http://localhost:8080/traders` or `http://localhost:8080/whales/view`.
+6. Open `http://localhost:8080/`.
 
 If you see `java: package org.springframework.stereotype does not exist`, IntelliJ is compiling the project as a plain Java project instead of a Maven project. Reload `pom.xml` as Maven and make sure the Maven tool window shows `spring-boot-starter-web` and `spring-boot-starter-thymeleaf`.
+
+If you see `Could not find or load main class com.marketmonitor.MarketMonitorApplication`, delete the broken run configuration and run the app from the Maven-loaded module:
+
+1. Right-click `pom.xml`.
+2. Choose `Add as Maven Project` or `Reload Maven Project`.
+3. Open `src/main/java/com/marketmonitor/MarketMonitorApplication.java`.
+4. Click the green run icon next to `main`.
+5. If IntelliJ asks for a module, choose `market-activity-tracker`.
 
 ### Terminal
 
@@ -45,12 +53,13 @@ mvn spring-boot:run
 Then open:
 
 ```text
-http://localhost:8080/traders
+http://localhost:8080/
 ```
 
-Whale Tracker page:
+Direct pages:
 
 ```text
+http://localhost:8080/traders
 http://localhost:8080/whales/view
 ```
 

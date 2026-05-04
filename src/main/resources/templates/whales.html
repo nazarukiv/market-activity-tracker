@@ -4,153 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polymarket Whale Tracker</title>
-    <style>
-        body {
-            margin: 0;
-            background: #f4f1ea;
-            color: #1d2a2e;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        h1 {
-            margin: 0 0 8px;
-            font-size: 42px;
-        }
-
-        .subtitle {
-            margin: 0 0 32px;
-            color: #617075;
-        }
-
-        section {
-            margin-bottom: 32px;
-            padding: 24px;
-            background: #fffaf0;
-            border: 1px solid #ded5c5;
-            border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(29, 42, 46, 0.08);
-        }
-
-        h2 {
-            margin: 0 0 16px;
-            font-size: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px 14px;
-            border-bottom: 1px solid #ece5d8;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        th {
-            background: #243b3f;
-            color: white;
-            font-weight: 600;
-        }
-
-        td.wallet,
-        td.market {
-            font-family: "Courier New", monospace;
-            font-size: 14px;
-            word-break: break-all;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .note {
-            color: #9d3f2f;
-            font-weight: 700;
-        }
-
-        @media (max-width: 700px) {
-            main {
-                padding: 24px 12px;
-            }
-
-            h1 {
-                font-size: 32px;
-            }
-
-            section {
-                padding: 16px;
-            }
-
-            th, td {
-                padding: 10px 8px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/market-ui.css}" href="/css/market-ui.css">
 </head>
 <body>
-<main>
-    <h1>Polymarket Whale Tracker</h1>
-    <p class="subtitle">Large recent trades and wallets with repeated large activity.</p>
+<div class="page-shell">
+    <header th:replace="~{fragments/layout :: siteNav('whales')}"></header>
 
-    <section>
-        <h2>Recent Whale Trades</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Wallet</th>
-                <th>Amount</th>
-                <th>Time</th>
-                <th>Market</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="whale : ${recentWhales}">
-                <td class="wallet" th:text="${whale.wallet}">wallet</td>
-                <td th:text="${'$' + #numbers.formatDecimal(whale.amount, 1, 2)}">$0.00</td>
-                <td th:text="${#temporals.format(whale.timestamp, 'yyyy-MM-dd HH:mm')}">time</td>
-                <td class="market" th:text="${whale.marketId}">market</td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(recentWhales)}">
-                <td colspan="4">No whale trades found in recent Polymarket activity.</td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
+    <main>
+        <section class="hero-band hero-band--compact">
+            <div class="container">
+                <span class="badge-pill">Large trades</span>
+                <h1 class="page-title">Polymarket Whale Tracker</h1>
+                <p class="page-intro">Recent high-value trades and wallets with repeated large activity, presented without the noise of a dark trading terminal.</p>
+                <div class="button-row page-actions">
+                    <a class="button-primary" th:href="@{/whales}" href="/whales">Recent API</a>
+                    <a class="button-outline" th:href="@{/traders}" href="/traders">View traders</a>
+                </div>
 
-    <section>
-        <h2>Active Whales</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Wallet</th>
-                <th>Number of Trades</th>
-                <th>Note</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="activeWhale : ${activeWhales}">
-                <td class="wallet" th:text="${activeWhale.key}">wallet</td>
-                <td th:text="${#lists.size(activeWhale.value)}">0</td>
-                <td class="note">high activity</td>
-            </tr>
-            <tr th:if="${#maps.isEmpty(activeWhales)}">
-                <td colspan="3">No active whale wallets detected.</td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
-</main>
+                <div class="metric-grid" aria-label="Whale summary">
+                    <div class="metric-card">
+                        <div class="metric-label">Recent trades</div>
+                        <div class="metric-value" th:text="${#lists.size(recentWhales)}">0</div>
+                        <p class="metric-copy">Large trades in the current feed.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active wallets</div>
+                        <div class="metric-value" th:text="${#maps.size(activeWhales)}">0</div>
+                        <p class="metric-copy">Wallets with repeated whale activity.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Signal</div>
+                        <div class="metric-value">$10k+</div>
+                        <p class="metric-copy">Minimum large trade threshold.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-stack container">
+            <section class="data-section" aria-labelledby="recent-whales-heading">
+                <div class="data-section__header">
+                    <div>
+                        <span class="badge-pill">Recent</span>
+                        <h2 class="data-section__title" id="recent-whales-heading">Recent Whale Trades</h2>
+                        <p class="data-section__copy">Large trades from the most recent Polymarket activity feed.</p>
+                    </div>
+                    <a class="button-outline" th:href="@{/whales}" href="/whales">JSON</a>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Wallet</th>
+                            <th>Amount</th>
+                            <th>Time</th>
+                            <th>Market</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="whale : ${recentWhales}">
+                            <td class="wallet-code" data-label="Wallet" th:text="${whale.wallet}">wallet</td>
+                            <td class="number-cell" data-label="Amount" th:text="${'$' + #numbers.formatDecimal(whale.amount, 1, 2)}">$0.00</td>
+                            <td data-label="Time" th:text="${#temporals.format(whale.timestamp, 'yyyy-MM-dd HH:mm')}">time</td>
+                            <td class="market-code" data-label="Market" th:text="${whale.marketId}">market</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentWhales)}">
+                            <td class="empty-state" colspan="4">No whale trades found in recent Polymarket activity.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="data-section" aria-labelledby="active-whales-heading">
+                <div class="data-section__header">
+                    <div>
+                        <span class="badge-pill">Repeated activity</span>
+                        <h2 class="data-section__title" id="active-whales-heading">Active Whales</h2>
+                        <p class="data-section__copy">Wallets appearing repeatedly in large trade activity.</p>
+                    </div>
+                    <a class="button-outline" th:href="@{/whales/active}" href="/whales/active">JSON</a>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Wallet</th>
+                            <th>Trades</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="activeWhale : ${activeWhales}">
+                            <td class="wallet-code" data-label="Wallet" th:text="${activeWhale.key}">wallet</td>
+                            <td class="number-cell" data-label="Trades" th:text="${#lists.size(activeWhale.value)}">0</td>
+                            <td data-label="Status"><span class="status-pill">High activity</span></td>
+                        </tr>
+                        <tr th:if="${#maps.isEmpty(activeWhales)}">
+                            <td class="empty-state" colspan="3">No active whale wallets detected.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: siteFooter}"></footer>
+</div>
 </body>
 </html>
