@@ -46,4 +46,13 @@ target/
 *.properties
 application.properties
 
-/docs/
+!.mvn/
+!.mvn/wrapper/
+!.mvn/wrapper/maven-wrapper.properties
+
+### AI agent local context ###
+.agents/
+.codex/
+AGENT.md
+CLAUDE.md
+GEMINI.md

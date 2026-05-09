@@ -15,11 +15,27 @@
             <div class="container">
                 <span class="badge-pill">Trader rankings</span>
                 <h1 class="page-title">Top Polymarket Traders</h1>
-                <p class="page-intro">Ranked by estimated trading volume from recent activity, grouped into weekly, monthly, and six month windows.</p>
+                <p class="page-intro">Ranked by public Polymarket trading volume, grouped into weekly, monthly, and six month windows.</p>
                 <div class="button-row page-actions">
                     <a class="button-primary" th:href="@{/traders/top/weekly}" href="/traders/top/weekly">Weekly API</a>
                     <a class="button-outline" th:href="@{/whales/view}" href="/whales/view">View whales</a>
                 </div>
+
+                <form class="wallet-search wallet-search--hero" th:action="@{/wallet/search}" action="/wallet/search" method="get" role="search" aria-label="Open trader profile by wallet">
+                    <label class="sr-only" for="traders-wallet-search">Wallet address</label>
+                    <input class="wallet-search__input"
+                           id="traders-wallet-search"
+                           name="wallet"
+                           type="search"
+                           placeholder="Paste any wallet address"
+                           autocomplete="off"
+                           autocapitalize="none"
+                           spellcheck="false"
+                           th:value="${walletSearchValue}">
+                    <button class="wallet-search__button" type="submit">Search</button>
+                </form>
+                <p class="wallet-search__hint">Open a profile for any 0x wallet, even if it is not in the rankings.</p>
+                <p class="wallet-search__error" th:if="${walletSearchError}" th:text="${walletSearchError}">Enter a valid wallet address.</p>
 
                 <div class="metric-grid" aria-label="Ranking windows">
                     <div class="metric-card">
@@ -64,9 +80,11 @@
                         <tbody>
                         <tr th:each="trader, traderStat : ${weeklyTraders}">
                             <td class="rank-cell" data-label="Rank" th:text="${traderStat.count}">1</td>
-                            <td class="wallet-code" data-label="Wallet" th:text="${trader.wallet}">wallet</td>
+                            <td data-label="Wallet">
+                                <a class="wallet-code wallet-link" th:href="@{/trader/{wallet}(wallet=${trader.wallet})}" th:text="${trader.wallet}">wallet</a>
+                            </td>
                             <td class="number-cell" data-label="Volume" th:text="${'$' + #numbers.formatDecimal(trader.totalVolume, 1, 2)}">$0.00</td>
-                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount}">0</td>
+                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount == null ? 'N/A' : trader.tradesCount}">N/A</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(weeklyTraders)}">
                             <td class="empty-state" colspan="4">No weekly trader data available.</td>
@@ -98,9 +116,11 @@
                         <tbody>
                         <tr th:each="trader, traderStat : ${monthlyTraders}">
                             <td class="rank-cell" data-label="Rank" th:text="${traderStat.count}">1</td>
-                            <td class="wallet-code" data-label="Wallet" th:text="${trader.wallet}">wallet</td>
+                            <td data-label="Wallet">
+                                <a class="wallet-code wallet-link" th:href="@{/trader/{wallet}(wallet=${trader.wallet})}" th:text="${trader.wallet}">wallet</a>
+                            </td>
                             <td class="number-cell" data-label="Volume" th:text="${'$' + #numbers.formatDecimal(trader.totalVolume, 1, 2)}">$0.00</td>
-                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount}">0</td>
+                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount == null ? 'N/A' : trader.tradesCount}">N/A</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(monthlyTraders)}">
                             <td class="empty-state" colspan="4">No monthly trader data available.</td>
@@ -132,9 +152,11 @@
                         <tbody>
                         <tr th:each="trader, traderStat : ${halfYearTraders}">
                             <td class="rank-cell" data-label="Rank" th:text="${traderStat.count}">1</td>
-                            <td class="wallet-code" data-label="Wallet" th:text="${trader.wallet}">wallet</td>
+                            <td data-label="Wallet">
+                                <a class="wallet-code wallet-link" th:href="@{/trader/{wallet}(wallet=${trader.wallet})}" th:text="${trader.wallet}">wallet</a>
+                            </td>
                             <td class="number-cell" data-label="Volume" th:text="${'$' + #numbers.formatDecimal(trader.totalVolume, 1, 2)}">$0.00</td>
-                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount}">0</td>
+                            <td class="number-cell" data-label="Trades" th:text="${trader.tradesCount == null ? 'N/A' : trader.tradesCount}">N/A</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(halfYearTraders)}">
                             <td class="empty-state" colspan="4">No six month trader data available.</td>

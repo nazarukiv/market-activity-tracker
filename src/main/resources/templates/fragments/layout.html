@@ -19,10 +19,27 @@
             <a class="nav-link" th:classappend="${active == 'whales'} ? ' is-active' : ''" th:href="@{/whales/view}" href="/whales/view">Whales</a>
         </nav>
 
+        <form class="wallet-search wallet-search--nav" th:action="@{/wallet/search}" action="/wallet/search" method="get" role="search" aria-label="Open trader profile by wallet">
+            <label class="sr-only" for="global-wallet-search">Wallet address</label>
+            <input class="wallet-search__input"
+                   id="global-wallet-search"
+                   name="wallet"
+                   type="search"
+                   placeholder="Paste wallet address"
+                   autocomplete="off"
+                   autocapitalize="none"
+                   spellcheck="false"
+                   th:value="${walletSearchValue}">
+            <button class="wallet-search__button" type="submit">Search</button>
+        </form>
+
         <div class="site-nav__actions">
             <a class="nav-link" th:href="@{/whales}" href="/whales">API</a>
             <a class="button-primary" th:href="@{/traders}" href="/traders">Open tracker</a>
         </div>
+    </div>
+    <div class="wallet-search-alert container" th:if="${walletSearchError != null and active != 'traders'}" th:text="${walletSearchError}">
+        Enter a valid wallet address.
     </div>
 </header>
 

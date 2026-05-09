@@ -35,7 +35,7 @@ public class WhaleController {
     public String showWhales(Model model) {
         List<WhaleTrade> recentWhales = whaleService.getRecentWhales();
         model.addAttribute("recentWhales", recentWhales);
-        model.addAttribute("activeWhales", whaleService.getActiveWhales());
+        model.addAttribute("activeWhales", whaleService.getActiveWhales(recentWhales));
         return "whales";
     }
 }

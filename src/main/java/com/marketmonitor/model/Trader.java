@@ -28,10 +28,10 @@ public class Trader {
     private double volume;
 
     @JsonAlias({"trades", "tradesCount"})
-    private int tradesCount;
+    private Integer tradesCount;
 
     @JsonAlias({"pnl", "profit"})
-    private double profit;
+    private Double profit;
 
     @JsonIgnore
     private LocalDateTime firstTradeTime;
@@ -73,11 +73,11 @@ public class Trader {
         return volume;
     }
 
-    public int getTradesCount() {
+    public Integer getTradesCount() {
         return tradesCount;
     }
 
-    public double getProfit() {
+    public Double getProfit() {
         return profit;
     }
 

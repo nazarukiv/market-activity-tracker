@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${profile.nickname + ' · Trader Profile'}">Trader Profile</title>
+    <link rel="stylesheet" th:href="@{/css/market-ui.css}" href="/css/market-ui.css">
+</head>
+<body>
+<div class="page-shell">
+    <header th:replace="~{fragments/layout :: siteNav('traders')}"></header>
+
+    <main>
+        <section class="hero-band hero-band--compact trader-hero">
+            <div class="profile-hero-grid container">
+                <div class="profile-hero__copy">
+                    <div class="profile-kicker">
+                        <span class="badge-pill">Trader profile</span>
+                        <span class="profile-source" th:if="${profile.limitedData}">Limited recent activity available for this wallet.</span>
+                    </div>
+                    <h1 class="page-title" th:text="${profile.nickname}">Trader 8A2C</h1>
+                    <p class="wallet-large" th:text="${profile.wallet}">0x0000000000000000000000000000000000000000</p>
+
+                    <div class="badge-row" aria-label="Trader badges">
+                        <span class="badge-pill badge-pill--soft" th:each="badge : ${profile.badges}" th:text="${badge}">Whale</span>
+                    </div>
+
+                    <p class="page-intro" th:text="${profile.summary}">Trader profile summary.</p>
+
+                    <div class="button-row page-actions">
+                        <a class="button-primary" th:href="@{/trader/{wallet}/data(wallet=${profile.wallet})}" href="/trader/0x0/data">View JSON</a>
+                        <a class="button-outline button-with-icon"
+                           th:href="${'https://polymarket.com/profile/' + profile.wallet}"
+                           href="https://polymarket.com/profile/0x0000000000000000000000000000000000000000"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <span>Open on Polymarket</span>
+                            <svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                <path d="M6 3.25H3.75C2.78 3.25 2 4.03 2 5v7.25c0 .97.78 1.75 1.75 1.75H11c.97 0 1.75-.78 1.75-1.75V10h-1.5v2.25c0 .14-.11.25-.25.25H3.75a.25.25 0 0 1-.25-.25V5c0-.14.11-.25.25-.25H6v-1.5Z"></path>
+                                <path d="M8.25 2h5.25v5.25H12V4.56L7.53 9.03 6.47 7.97 10.94 3.5H8.25V2Z"></path>
+                            </svg>
+                        </a>
+                        <a class="button-outline" th:href="@{/traders}" href="/traders">Back to rankings</a>
+                    </div>
+                </div>
+
+                <aside class="profile-hero-card" aria-label="Trader headline metrics">
+                    <div>
+                        <span class="badge-pill badge-pill--soft">Signal snapshot</span>
+                        <p class="profile-hero-card__value" th:text="${profile.estimatedPnl == null ? 'N/A' : ((profile.estimatedPnl >= 0 ? '+' : '-') + '$' + #numbers.formatDecimal(profile.absoluteEstimatedPnl, 1, 2))}">+$0.00</p>
+                        <p class="profile-hero-card__copy">PNL from public position or leaderboard data when available.</p>
+                    </div>
+                    <div class="signal-list">
+                        <div class="signal-row">
+                            <span>Volume</span>
+                            <strong th:text="${'$' + #numbers.formatDecimal(profile.tradingVolume, 1, 2)}">$0.00</strong>
+                        </div>
+                        <div class="signal-row">
+                            <span>Win rate</span>
+                            <strong th:text="${profile.winRate == null ? 'N/A' : #numbers.formatDecimal(profile.winRate, 1, 1) + '%'}">N/A</strong>
+                        </div>
+                        <div class="signal-row">
+                            <span>Risk score</span>
+                            <strong th:text="${profile.riskMetrics.riskScore == null ? 'N/A' : profile.riskMetrics.riskScore + '/100'}">N/A</strong>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <div class="content-stack container">
+            <section aria-labelledby="profile-stats-heading">
+                <div class="section-heading section-heading--compact">
+                    <div class="section-heading__copy">
+                        <span class="badge-pill">Overview</span>
+                        <h2 class="section-title" id="profile-stats-heading">Profile statistics</h2>
+                    </div>
+                </div>
+
+                <div class="metric-grid profile-stat-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">PNL</div>
+                        <div class="metric-value" th:text="${profile.estimatedPnl == null ? 'N/A' : ((profile.estimatedPnl >= 0 ? '+' : '-') + '$' + #numbers.formatDecimal(profile.absoluteEstimatedPnl, 1, 2))}">N/A</div>
+                        <p class="metric-copy">From public position or leaderboard data.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Trading volume</div>
+                        <div class="metric-value" th:text="${'$' + #numbers.formatDecimal(profile.tradingVolume, 1, 2)}">$0.00</div>
+                        <p class="metric-copy">Tracked wallet turnover.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Win rate</div>
+                        <div class="metric-value" th:text="${profile.winRate == null ? 'N/A' : #numbers.formatDecimal(profile.winRate, 1, 1) + '%'}">N/A</div>
+                        <p class="metric-copy">Closed-position win share.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total positions</div>
+                        <div class="metric-value" th:text="${profile.totalPositions == null ? 'N/A' : profile.totalPositions}">N/A</div>
+                        <p class="metric-copy">Positions returned by public data.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Average position</div>
+                        <div class="metric-value" th:text="${profile.averagePositionSize == null ? 'N/A' : '$' + #numbers.formatDecimal(profile.averagePositionSize, 1, 2)}">N/A</div>
+                        <p class="metric-copy">Mean exposure per position.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Markets traded</div>
+                        <div class="metric-value" th:text="${profile.marketsTraded == null ? 'N/A' : profile.marketsTraded}">N/A</div>
+                        <p class="metric-copy">Distinct market surfaces.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="data-section performance-section" aria-labelledby="performance-heading">
+                <div class="data-section__header">
+                    <div>
+                        <span class="badge-pill">Performance</span>
+                        <h2 class="data-section__title" id="performance-heading">Public PNL context</h2>
+                        <p class="data-section__copy">Resolved PNL is shown when the public endpoints expose it. Unsupported analytics stay marked as N/A.</p>
+                    </div>
+                </div>
+
+                <div class="performance-layout">
+                    <div class="empty-panel" aria-label="Cumulative pnl status">
+                        <span class="badge-pill badge-pill--soft">No synthetic chart</span>
+                        <h3>Time-series PNL is not available from the current public feed.</h3>
+                        <p>The profile keeps real wallet totals visible without drawing a fabricated performance curve.</p>
+                    </div>
+
+                    <div class="analytics-list" aria-label="Performance analytics">
+                        <div class="analytics-row">
+                            <span>Current pnl</span>
+                            <strong th:text="${profile.estimatedPnl == null ? 'N/A' : ((profile.estimatedPnl >= 0 ? '+' : '-') + '$' + #numbers.formatDecimal(profile.absoluteEstimatedPnl, 1, 2))}">N/A</strong>
+                        </div>
+                        <div class="analytics-row">
+                            <span>Average position</span>
+                            <strong th:text="${profile.averagePositionSize == null ? 'N/A' : '$' + #numbers.formatDecimal(profile.averagePositionSize, 1, 2)}">N/A</strong>
+                        </div>
+                        <div class="analytics-row">
+                            <span>Consistency</span>
+                            <strong th:text="${profile.riskMetrics.consistencyScore == null ? 'N/A' : profile.riskMetrics.consistencyScore + '/100'}">N/A</strong>
+                        </div>
+                        <div class="analytics-row">
+                            <span>Volatility</span>
+                            <strong th:text="${profile.riskMetrics.volatilityScore == null ? 'N/A' : profile.riskMetrics.volatilityScore + '/100'}">N/A</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="data-section" aria-labelledby="activity-heading">
+                <div class="data-section__header">
+                    <div>
+                        <span class="badge-pill">Recent activity</span>
+                        <h2 class="data-section__title" id="activity-heading">Latest positions</h2>
+                        <p class="data-section__copy">Recent market entries with side, notional size, and timestamp from public wallet trades.</p>
+                    </div>
+                </div>
+
+                <div class="activity-feed">
+                    <article class="activity-row" th:each="activity : ${profile.recentActivity}">
+                        <div class="activity-row__main">
+                            <span class="side-pill"
+                                  th:classappend="${activity.side == 'YES' || activity.side == 'BUY'} ? ' side-pill--yes' : (${activity.side == 'NO' || activity.side == 'SELL'} ? ' side-pill--no' : ' side-pill--neutral')"
+                                  th:text="${activity.side}">YES</span>
+                            <div>
+                                <h3 th:text="${activity.marketName}">Market name</h3>
+                                <p th:text="${activity.timestamp == null ? 'N/A' : #temporals.format(activity.timestamp, 'yyyy-MM-dd HH:mm') + ' UTC'}">N/A</p>
+                            </div>
+                        </div>
+                        <div class="activity-row__meta">
+                            <span th:text="${'$' + #numbers.formatDecimal(activity.amount, 1, 2)}">$0.00</span>
+                            <strong th:if="${activity.pnl != null}"
+                                    th:classappend="${activity.positivePnl} ? ' pnl-positive' : ' pnl-negative'"
+                                    th:text="${(activity.pnl >= 0 ? '+' : '-') + '$' + #numbers.formatDecimal(activity.absolutePnl, 1, 2)}">+$0.00</strong>
+                            <span class="muted-value" th:unless="${activity.pnl != null}">N/A</span>
+                        </div>
+                    </article>
+                    <div class="empty-list-state" th:if="${#lists.isEmpty(profile.recentActivity)}">No recent wallet trades were returned.</div>
+                </div>
+            </section>
+
+            <section aria-labelledby="top-markets-heading">
+                <div class="section-heading section-heading--compact">
+                    <div class="section-heading__copy">
+                        <span class="badge-pill">Markets</span>
+                        <h2 class="section-title" id="top-markets-heading">Top markets traded</h2>
+                    </div>
+                </div>
+
+                <div class="profile-card-grid">
+                    <article class="market-profile-card" th:each="market : ${profile.topMarkets}">
+                        <div class="feature-card__meta">Market</div>
+                        <h3 class="card-title" th:text="${market.title}">Market title</h3>
+                        <div class="market-profile-card__stats">
+                            <div>
+                                <span>Total volume</span>
+                                <strong th:text="${'$' + #numbers.formatDecimal(market.totalVolume, 1, 2)}">$0.00</strong>
+                            </div>
+                            <div>
+                                <span>Accuracy</span>
+                                <strong th:text="${market.accuracy == null ? 'N/A' : #numbers.formatDecimal(market.accuracy, 1, 1) + '%'}">N/A</strong>
+                            </div>
+                        </div>
+                    </article>
+                    <div class="empty-list-state" th:if="${#lists.isEmpty(profile.topMarkets)}">No market exposure data was returned.</div>
+                </div>
+            </section>
+
+            <section aria-labelledby="risk-heading">
+                <div class="section-heading section-heading--compact">
+                    <div class="section-heading__copy">
+                        <span class="badge-pill">Risk</span>
+                        <h2 class="section-title" id="risk-heading">Risk metrics</h2>
+                    </div>
+                </div>
+
+                <div class="metric-grid risk-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Risk score</div>
+                        <div class="metric-value" th:text="${profile.riskMetrics.riskScore == null ? 'N/A' : profile.riskMetrics.riskScore + '/100'}">N/A</div>
+                        <p class="metric-copy">Unavailable from current public feed.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Average hold time</div>
+                        <div class="metric-value" th:text="${profile.riskMetrics.averageHoldTime == null ? 'N/A' : profile.riskMetrics.averageHoldTime}">N/A</div>
+                        <p class="metric-copy">Unavailable from current public feed.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Volatility score</div>
+                        <div class="metric-value" th:text="${profile.riskMetrics.volatilityScore == null ? 'N/A' : profile.riskMetrics.volatilityScore + '/100'}">N/A</div>
+                        <p class="metric-copy">Unavailable from current public feed.</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Consistency score</div>
+                        <div class="metric-value" th:text="${profile.riskMetrics.consistencyScore == null ? 'N/A' : profile.riskMetrics.consistencyScore + '/100'}">N/A</div>
+                        <p class="metric-copy">Unavailable from current public feed.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section aria-labelledby="related-heading">
+                <div class="section-heading section-heading--compact">
+                    <div class="section-heading__copy">
+                        <span class="badge-pill">Related</span>
+                        <h2 class="section-title" id="related-heading">Leaderboard context</h2>
+                    </div>
+                </div>
+
+                <div class="related-trader-grid">
+                    <a class="related-trader-card" th:each="trader : ${profile.relatedTraders}" th:href="@{/trader/{wallet}(wallet=${trader.wallet})}" href="/trader/0x0">
+                        <div>
+                            <div class="feature-card__meta" th:text="${trader.similarity == null ? 'Weekly leaderboard' : #numbers.formatDecimal(trader.similarity, 1, 0) + '% match'}">Weekly leaderboard</div>
+                            <h3 class="card-title" th:text="${trader.nickname}">Trader 0000</h3>
+                            <p class="wallet-code" th:text="${trader.shortWallet}">0x0000...0000</p>
+                        </div>
+                        <span class="button-tertiary" th:text="${'$' + #numbers.formatDecimal(trader.volume, 1, 2)}">$0.00</span>
+                    </a>
+                    <div class="empty-list-state" th:if="${#lists.isEmpty(profile.relatedTraders)}">No leaderboard traders were returned.</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: siteFooter}"></footer>
+</div>
+</body>
+</html>

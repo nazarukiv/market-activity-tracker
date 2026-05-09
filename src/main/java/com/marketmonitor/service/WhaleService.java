@@ -28,4 +28,8 @@ public class WhaleService {
     public Map<String, List<WhaleTrade>> getActiveWhales() {
         return whaleAnalyzer.detectSuddenActivity(getRecentWhales());
     }
+
+    public Map<String, List<WhaleTrade>> getActiveWhales(List<WhaleTrade> recentWhales) {
+        return whaleAnalyzer.detectSuddenActivity(recentWhales);
+    }
 }

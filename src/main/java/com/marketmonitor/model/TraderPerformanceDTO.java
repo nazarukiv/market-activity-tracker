@@ -4,10 +4,10 @@ public class TraderPerformanceDTO {
 
     private String wallet;
     private double totalVolume;
-    private int tradesCount;
+    private Integer tradesCount;
     private String period;
 
-    public TraderPerformanceDTO(String wallet, double totalVolume, int tradesCount, String period) {
+    public TraderPerformanceDTO(String wallet, double totalVolume, Integer tradesCount, String period) {
         this.wallet = wallet;
         this.totalVolume = totalVolume;
         this.tradesCount = tradesCount;
@@ -22,7 +22,7 @@ public class TraderPerformanceDTO {
         return totalVolume;
     }
 
-    public int getTradesCount() {
+    public Integer getTradesCount() {
         return tradesCount;
     }
 

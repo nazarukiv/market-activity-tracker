@@ -58,12 +58,16 @@ public class WhaleAnalyzer {
                 tradeAmountUsd(trade),
                 toDateTime(trade.getTimestamp()),
                 trade.getMarketId(),
+                trade.getMarketTitle(),
+                displaySide(trade),
                 trade.getPrice()
         );
     }
 
     private boolean hasSuddenActivity(List<WhaleTrade> trades) {
-        List<WhaleTrade> sortedTrades = sortByTimestamp(trades);
+        List<WhaleTrade> sortedTrades = sortByTimestamp(trades).stream()
+                .filter(trade -> trade.getTimestamp() != null)
+                .toList();
 
         for (int start = 0; start < sortedTrades.size(); start++) {
             int end = start + SUDDEN_ACTIVITY_MIN_TRADES - 1;
@@ -86,15 +90,31 @@ public class WhaleAnalyzer {
 
     private List<WhaleTrade> sortByTimestamp(List<WhaleTrade> trades) {
         return trades.stream()
-                .sorted(Comparator.comparing(WhaleTrade::getTimestamp))
+                .sorted(Comparator.comparing(
+                        WhaleTrade::getTimestamp,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ))
                 .toList();
     }
 
     private double tradeAmountUsd(Trade trade) {
-        return trade.getAmount() * trade.getPrice();
+        return Math.abs(trade.getUsdValue());
     }
 
     private LocalDateTime toDateTime(long epochSeconds) {
+        if (epochSeconds <= 0) {
+            return null;
+        }
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds), ZoneOffset.UTC);
+    }
+
+    private String displaySide(Trade trade) {
+        if (trade.getOutcome() != null && !trade.getOutcome().isBlank()) {
+            return trade.getOutcome().trim().toUpperCase();
+        }
+        if (trade.getSide() != null && !trade.getSide().isBlank()) {
+            return trade.getSide().trim().toUpperCase();
+        }
+        return null;
     }
 }

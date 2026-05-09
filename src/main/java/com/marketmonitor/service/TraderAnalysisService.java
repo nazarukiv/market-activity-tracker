@@ -17,6 +17,7 @@ public class TraderAnalysisService {
 
     private static final int LEADERBOARD_LIMIT = 25;
     private static final int TRADE_LIMIT = 500;
+    private static final String HALF_YEAR_PERIOD = "HALF_YEAR";
 
     private final PolymarketClient polymarketClient;
 
@@ -40,13 +41,24 @@ public class TraderAnalysisService {
         LocalDateTime startTime = LocalDateTime.now(ZoneOffset.UTC).minusDays(days);
 
         return polymarketClient.fetchTopTraders(leaderboardPeriod, LEADERBOARD_LIMIT).stream()
+                .filter(trader -> trader.getWallet() != null && !trader.getWallet().isBlank())
                 .map(trader -> calculatePerformance(trader, startTime, period))
-                .filter(result -> result.getTotalVolume() > 0 || result.getTradesCount() > 0)
+                .filter(result -> result.getTotalVolume() > 0
+                        || (result.getTradesCount() != null && result.getTradesCount() > 0))
                 .sorted(Comparator.comparingDouble(TraderPerformanceDTO::getTotalVolume).reversed())
                 .toList();
     }
 
     private TraderPerformanceDTO calculatePerformance(Trader trader, LocalDateTime startTime, String period) {
+        if (!HALF_YEAR_PERIOD.equals(period)) {
+            return new TraderPerformanceDTO(
+                    trader.getWallet(),
+                    trader.getVolume(),
+                    trader.getTradesCount(),
+                    period
+            );
+        }
+
         List<Trade> trades = polymarketClient.fetchTradesForTrader(trader.getWallet(), TRADE_LIMIT);
 
         List<Trade> recentTrades = trades.stream()
@@ -63,7 +75,7 @@ public class TraderAnalysisService {
         }
 
         double totalVolume = recentTrades.stream()
-                .mapToDouble(trade -> trade.getAmount() * trade.getPrice())
+                .mapToDouble(Trade::getUsdValue)
                 .sum();
 
         return new TraderPerformanceDTO(

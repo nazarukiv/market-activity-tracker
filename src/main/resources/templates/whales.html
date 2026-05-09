@@ -57,19 +57,29 @@
                         <tr>
                             <th>Wallet</th>
                             <th>Amount</th>
+                            <th>Side</th>
                             <th>Time</th>
                             <th>Market</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="whale : ${recentWhales}">
-                            <td class="wallet-code" data-label="Wallet" th:text="${whale.wallet}">wallet</td>
+                            <td data-label="Wallet">
+                                <a class="wallet-code wallet-link" th:href="@{/trader/{wallet}(wallet=${whale.wallet})}" th:text="${whale.wallet}">wallet</a>
+                            </td>
                             <td class="number-cell" data-label="Amount" th:text="${'$' + #numbers.formatDecimal(whale.amount, 1, 2)}">$0.00</td>
-                            <td data-label="Time" th:text="${#temporals.format(whale.timestamp, 'yyyy-MM-dd HH:mm')}">time</td>
-                            <td class="market-code" data-label="Market" th:text="${whale.marketId}">market</td>
+                            <td data-label="Side">
+                                <span class="side-pill side-pill--neutral" th:if="${whale.side == null}">N/A</span>
+                                <span class="side-pill"
+                                      th:unless="${whale.side == null}"
+                                      th:classappend="${whale.side == 'YES' || whale.side == 'BUY'} ? ' side-pill--yes' : (${whale.side == 'NO' || whale.side == 'SELL'} ? ' side-pill--no' : ' side-pill--neutral')"
+                                      th:text="${whale.side}">YES</span>
+                            </td>
+                            <td data-label="Time" th:text="${whale.timestamp == null ? 'N/A' : #temporals.format(whale.timestamp, 'yyyy-MM-dd HH:mm')}">N/A</td>
+                            <td class="market-code" data-label="Market" th:text="${whale.marketLabel}">market</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(recentWhales)}">
-                            <td class="empty-state" colspan="4">No whale trades found in recent Polymarket activity.</td>
+                            <td class="empty-state" colspan="5">No whale trades found in recent Polymarket activity.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -96,7 +106,9 @@
                         </thead>
                         <tbody>
                         <tr th:each="activeWhale : ${activeWhales}">
-                            <td class="wallet-code" data-label="Wallet" th:text="${activeWhale.key}">wallet</td>
+                            <td data-label="Wallet">
+                                <a class="wallet-code wallet-link" th:href="@{/trader/{wallet}(wallet=${activeWhale.key})}" th:text="${activeWhale.key}">wallet</a>
+                            </td>
                             <td class="number-cell" data-label="Trades" th:text="${#lists.size(activeWhale.value)}">0</td>
                             <td data-label="Status"><span class="status-pill">High activity</span></td>
                         </tr>
